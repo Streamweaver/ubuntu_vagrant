@@ -1,0 +1,49 @@
+---
+  # Message of the Day on the machine.
+  - name: change MOTD
+    template: src=motd.j2 dest=/etc/motd owner=root mode=0644
+    tags: motd
+
+  ##
+  # Adding common users to the system.
+  # Below is an example of howto add a new admin user.  For the public key you
+  # just need to have that file in the 'roles/common/files' directory
+  # remember that keys good, passwords bad.
+  #
+  - name: add ssh users
+    user:
+      name="{{ item.name }}"
+      state=present
+      groups=admin,
+      shell='/bin/bash'
+      password='!'
+    tags: users
+    when: ssh_users|default(None) != None
+    with_items: "{{ ssh_users }}"
+
+  - name: add ssh user public keys
+    authorized_key: user={{ item.name }} key="{{ lookup('file', item.keyfile) }}" state=present
+    tags: users
+    when: ssh_users|default(None) != None
+    with_items: "{{ ssh_users }}"
+
+  - name: Modifiy admins so they need no sudo password
+    tags: users
+    lineinfile: dest=/etc/sudoers state=present regexp='^%admin ALL\=' line='%admin ALL=(ALL) NOPASSWD:ALL' validate='visudo -cf %s'
+
+  - name: Add nano for everyone.
+    tags: apps
+    apt: pkg='nano' state=present
+
+  - name: Add git for everyone
+    tags: apps
+    apt: pkg=git state=present
+
+  - name: ensure /opt exists for any apps we want to install later.
+    tags: directories
+    file: path=/opt state=directory mode=0755 owner=root group=root
+
+  - name: remove designated users
+    tags: users
+    user: name="{{ item }}" state=absent
+    with_items: "{{ deleted_users }}"

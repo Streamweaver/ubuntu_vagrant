@@ -1,0 +1,12 @@
+---
+  mw_site_name: "Vagrant Test Site"
+  mw_namespace: "Vagrant_Test_Site"
+  mw_scriptpath: /mediawiki
+  mw_server: http://192.168.33.10
+  mw_logo: common/images/wiki.png
+  mw_db_name: mediawiki
+  mw_db_user: mwdbuser
+  mw_db_password: setinplaybook
+
+  mw_install_args:
+    - {''}

@@ -1,0 +1,20 @@
+---
+- name: Apache | Install package
+  apt: pkg=apache2 state=installed
+  tags: apache2
+
+- name: Apache | Enable modules
+  apache2_module: name={{ item }} state=present
+  tags: apache2
+  when: a2modules_active
+  with_items: "{{ a2modules_active }}"
+  notify:
+    - restart apache
+
+- name: Apache | Disable modules
+  apache2_module: name={{ item }} state=absent
+  tags: apache2
+  when: a2modules_inactive
+  with_items: "{{ a2modules_inactive }}"
+  notify:
+    - restart apache

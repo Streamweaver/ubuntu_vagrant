@@ -1,0 +1,25 @@
+---
+  - hosts: all
+    user: vagrant
+    sudo: yes
+    vars:
+      playbook_name: mediawiki-playbook
+      ssh_users:
+        - { name: 'tur057', keyfile: 'tur057_rsa.pub' }
+      sudoers:
+        - 'tur057'
+      deleted_users:
+        - 'ssh_users'
+      a2modules_inactive:
+        - 'rewrite'
+      mw_version: 1.2.5
+      mw_dir: /opt/mediawiki
+      mw_db_name: mediawiki
+      mw_db_user: mwdbuser
+      mw_db_password: setinplaybook
+    roles:
+      - common
+      - apache2
+      - mysql
+      - php
+      - mediawiki

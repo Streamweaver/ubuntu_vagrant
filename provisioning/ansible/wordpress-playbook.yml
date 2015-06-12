@@ -1,0 +1,35 @@
+---
+  - hosts: all
+    user: vagrant
+    sudo: yes
+    vars:
+      playbook_name: common-playbook
+      ssh_users:
+        - { name: 'tur057', keyfile: 'tur057_rsa.pub' }
+      sudoers:
+        - 'tur057'
+      deleted_users:
+        - 'ssh_users'
+      a2modules_inactive:
+        - 'rewrite'
+      wp_db_user: testpress
+      wp_dir: /opt/testpress
+      wp_db_name: testpress
+      wp_db_pass: onlyvagrantuse
+      wp_db_user: wptest_dbadmin
+      wp_title: "Ansible Installed WP Site"
+      wp_url: http://192.168.33.10/
+      wp_admin: wptestadmin
+      wp_admin_pw: onlyvagrantuse
+      wp_admin_email: set@inplaybook.com
+      wp_plugins:
+        - ninja-forms
+      wp_themes:
+        - sparkling
+      wp_theme_active: sparkling
+    roles:
+      - common
+      - apache2
+      - mysql
+      - php
+      - wordpress
