@@ -1,0 +1,11 @@
+---
+  - name: MySQL | Install package
+    apt: pkg={{ item }} state=installed update_cache=yes
+    tags: mysql
+    with_items: "{{ mysql_pkgs }}"
+
+  - name: MySQL | Remove all anonymous MySQL Users
+    mysql_user: name='' host=localhost state=absent
+
+  - name: MySQL | Remove the default test DB
+    mysql_db: name=test state=absent

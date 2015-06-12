@@ -1,0 +1,6 @@
+---
+# Default Variables if none set in playbook.
+playbook_name: "COMMON ROLE **Set playbook var**"
+ssh_users: ""
+sudoers: ""
+deleted_uers: ""

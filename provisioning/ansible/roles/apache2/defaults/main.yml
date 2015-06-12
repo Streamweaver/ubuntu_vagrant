@@ -1,0 +1,3 @@
+---
+  a2modules_active: [] # i.e. ['rewrite', 'vhosts_alias']
+  a2modules_inactive: [] # i.e. ['rewrite', 'vhosts_alias']

@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+
+    DocumentRoot {{ mw_dir }}
+
+    <Directory {{ mw_dir }}>
+        Options FollowSymLinks MultiViews Includes ExecCGI
+    		AllowOverride none
+    		Order allow,deny
+    		allow from all
+    		Require all granted
+    </Directory>
+
+    ErrorLog /var/log/apache2/error.log
+    CustomLog /var/log/apache2/access.log combined
+
+</VirtualHost>

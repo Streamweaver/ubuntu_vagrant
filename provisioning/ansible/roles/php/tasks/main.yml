@@ -1,0 +1,10 @@
+---
+  - name: Apt | update cache
+    apt: update_cache=yes
+
+  - name: PHP | install php packages
+    apt:
+      name: "{{ item }}"
+      state: installed
+    with_items: php_packages
+    notify: restart apache

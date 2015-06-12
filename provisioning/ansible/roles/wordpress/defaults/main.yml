@@ -1,0 +1,15 @@
+---
+  wp_dir: /opt/wordpress
+  wp_db_name: wordpress
+  wp_db_pass: setinplaybook
+  wp_db_user: wp_dbadmin
+  wp_title: "Ansible Installed WP"
+  wp_url: http://192.168.33.10/
+  wp_admin: wpadmin
+  wp_admin_pw: setinplaybook
+  wp_admin_email: set@inplaybook.com
+  wp_plugins:
+    - akismet
+  wp_themes:
+    - twentyfifteen
+  wp_theme_active: twentyfifteen
