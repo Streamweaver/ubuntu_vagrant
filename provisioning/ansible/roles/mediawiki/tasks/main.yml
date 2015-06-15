@@ -30,14 +30,14 @@
     owner: root
     group: root
 
-- name: INSTALL | Create LocalSettings.php file in root
-  tags: install
-  template:
-    src: LocalSettings.php.j2
-    dest: /var/lib/mediawiki/LocalSettings.php
-    mode: 0600
-    group: root
-    owner: root
+# - name: INSTALL | Create LocalSettings.php file in root
+#   tags: install
+#   template:
+#     src: LocalSettings.php.j2
+#     dest: /var/lib/mediawiki/LocalSettings.php
+#     mode: 0600
+#     group: root
+#     owner: root
 
 # sudo a2enconf mediawiki
 - name: INSTALL | Enable apache config
