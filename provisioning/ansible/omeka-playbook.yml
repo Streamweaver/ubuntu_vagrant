@@ -1,0 +1,17 @@
+---
+  - hosts: all
+    user: vagrant
+    sudo: yes
+    vars:
+      playbook_name: mediawiki-playbook
+      ssh_users: None
+      sudoers: None
+      deleted_users: None
+      a2modules_active:
+        - 'rewrite'
+    roles:
+      - common
+      - apache2
+      - mysql
+      - php
+      - omeka
