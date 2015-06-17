@@ -20,12 +20,12 @@ Vagrant.configure(2) do |config|
     # Provisioning configuration for shell script.
     config.vm.provision "shell" do |sh|
       sh.path = "provisioning/ansible/windows.sh"
-      sh.args = "provisioning/ansible/mediawiki-playbook.yml"
+      sh.args = "provisioning/ansible/omeka-playbook.yml"
     end
   else
     # Provisioning configuration for Ansible (for Mac/Linux hosts).
     config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "provisioning/ansible/mediawiki-playbook.yml"
+      ansible.playbook = "provisioning/ansible/omeka-playbook.yml"
       ansible.sudo = true
     end
   end

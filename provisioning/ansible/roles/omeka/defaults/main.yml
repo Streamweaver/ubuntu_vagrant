@@ -1,0 +1,8 @@
+---
+  om_dir: /opt/omeka
+  om_prefix: omeka_
+  om_charset: utf8
+  om_host: localhost
+  om_db_name: omeka
+  om_db_user: omekadbuser
+  om_db_pass: setinplaybook
