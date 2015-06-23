@@ -1,0 +1,20 @@
+---
+  - hosts: all
+    user: vagrant
+    sudo: yes
+    vars:
+      playbook_name: omeka-playbook
+      ssh_users:
+        - { name: 'tur057', keyfile: 'tur057_rsa.pub' }
+      sudoers:
+        - 'tur057'
+      deleted_users:
+        - 'ssh_users'
+      a2modules_inactive:
+        - 'rewrite'
+    roles:
+      - common
+      - apache2
+      - mysql
+      - php
+      - omeka
