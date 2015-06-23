@@ -38,7 +38,6 @@
     src: "{{ om_dir }}/application/config/config.ini.changeme"
     dest: "{{ om_dir }}/application/config/config.ini"
 
-# symlink apache2 path
 - name: CONFIG | link the install path to the webroot
   file: src="{{ om_dir }}" dest=/var/www/html/omeka state=link
   notify:
@@ -47,6 +46,10 @@
 - name: CONFIG | Make thumbnail directory writable
   file: path="{{ om_dir }}/files/thumbnails" mode=0755
 
+# Hard coding some plugins to add for a demo.
+- name:
+
+# Finish off config
 - name: CONFIG | Change owner of directory to web server
   file: path="{{ om_dir }}" recurse=yes owner=www-data group=www-data
 

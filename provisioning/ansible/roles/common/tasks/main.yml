@@ -39,6 +39,10 @@
     tags: apps
     apt: pkg=git state=present
 
+  - name: Add Unzip
+    tags: apps
+    apt: pkg=unzip state=present
+
   - name: ensure /opt exists for any apps we want to install later.
     tags: directories
     file: path=/opt state=directory mode=0755 owner=root group=root
