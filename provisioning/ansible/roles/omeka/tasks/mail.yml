@@ -1,0 +1,7 @@
+
+- name: INSTALL | Clone latest version of Omeka from GitHub
+  tags: install
+  git:
+    repo: https://github.com/omeka/Omeka.git
+    dest: "{{ om_dir }}"
+    depth: 1
