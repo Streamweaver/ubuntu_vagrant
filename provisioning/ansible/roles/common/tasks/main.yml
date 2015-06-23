@@ -18,13 +18,13 @@
       shell='/bin/bash'
       password='!'
     tags: users
-    when: ssh_users|default(None) != None
+    when: ssh_users
     with_items: "{{ ssh_users }}"
 
   - name: add ssh user public keys
     authorized_key: user={{ item.name }} key="{{ lookup('file', item.keyfile) }}" state=present
     tags: users
-    when: ssh_users|default(None) != None
+    when: ssh_users
     with_items: "{{ ssh_users }}"
 
   - name: Modifiy admins so they need no sudo password

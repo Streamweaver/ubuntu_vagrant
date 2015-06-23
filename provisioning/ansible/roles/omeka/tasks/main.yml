@@ -1,0 +1,56 @@
+- name: INSTALL | Install imagemagick dependency
+  apt: pkg=imagemagick state=present
+
+- name: "INSTALL | Cloning git repo "
+  git:
+    repo: https://github.com/omeka/Omeka.git
+    depth: 1
+    dest: "{{ om_dir }}"
+    accept_hostkey: yes
+
+- name: "DB | Create database if not present"
+  tags: db
+  mysql_db:
+    name: "{{ om_db_name }}"
+    state: present
+    encoding: "utf8"
+    collation: "utf8_unicode_ci"
+
+- name: "DB | Create database user if not present"
+  tags: db
+  mysql_user:
+    name: "{{ om_db_user }}"
+    password: "{{ om_db_pass }}"
+    priv: "{{ om_db_name }}.*:ALL"
+    state: present
+
+# config files.
+- name: "CONFIG | setting up db.ini"
+  template:
+    src: db.ini.j2
+    dest: "{{ om_dir }}/db.ini"
+
+- name: CONFIG | setup .htaccess file
+  copy: src="{{ om_dir }}/.htaccess.changeme" dest="{{ om_dir }}/.htaccess"
+
+- name: CONFIG | setup ~/application/config/config.ini file
+  copy:
+    src: "{{ om_dir }}/application/config/config.ini.changeme"
+    dest: "{{ om_dir }}/application/config/config.ini"
+
+# symlink apache2 path
+- name: CONFIG | link the install path to the webroot
+  file: src="{{ om_dir }}" dest=/var/www/html/omeka state=link
+  notify:
+    - restart apache
+
+- name: CONFIG | Make thumbnail directory writable
+  file: path="{{ om_dir }}/files/thumbnails" mode=0755
+
+- name: CONFIG | Change owner of directory to web server
+  file: path="{{ om_dir }}" recurse=yes owner=www-data group=www-data
+
+- name: APACHE | modify default config and reload
+  copy: src=000-default.conf dest=/etc/apache2/sites-available/000-default.conf
+  notify:
+    - reload apache
