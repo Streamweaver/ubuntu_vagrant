@@ -1,4 +1,8 @@
 ---
-  mysql_pkgs:
-    - python-mysqldb
-    - mysql-server
+Debian_mysql_pkgs:
+  - python-mysqldb
+  - mysql-server
+RedHat_mysql_pkgs:
+  - MySQL-python
+  - MariaDB-server
+  - MariaDB-client

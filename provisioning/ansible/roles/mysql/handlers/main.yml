@@ -1,3 +1,9 @@
 ---
   - name: restart mysql
     service: name=mysql state=restarted sleep=5
+
+  - name: start mariadb
+    service: name=mariadb state=started enabled=yes
+
+  - name: restart mariadb
+    service: name=mariadb state=restarted enabled=yes

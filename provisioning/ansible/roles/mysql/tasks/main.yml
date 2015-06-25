@@ -1,8 +1,16 @@
+# see https://github.com/bertvv/ansible-role-mariadb/blob/master/tasks/main.yml
 ---
-  - name: MySQL | Install package
+  - name: MySQL | APT Install package
     apt: pkg={{ item }} state=installed update_cache=yes
-    tags: mysql
-    with_items: "{{ mysql_pkgs }}"
+    with_items: "{{ Debian_mysql_pkgs }}"
+    when: ansible_os_family == 'Debian'
+
+  - name: MariaDB | YUM Install package
+    yum: name={{ item }} state=installed
+    with_items: "{{ RedHat_mysql_pkgs }}"
+    when: ansible_os_family == 'RedHat'
+    notify:
+      - start mariadb
 
   - name: MySQL | Remove all anonymous MySQL Users
     mysql_user: name='' host=localhost state=absent

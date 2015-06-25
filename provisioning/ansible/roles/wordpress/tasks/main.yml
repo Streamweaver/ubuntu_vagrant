@@ -14,6 +14,13 @@
     priv: "{{ wp_db_name }}.*:ALL"
     state: present
 
+# Sendmail Config
+- apt: pkg=mailutils state=latest
+  when: ansible_os_family == 'Debian'
+
+- yum: name=mailx state=latest
+  when: ansible_os_family == 'RedHat'
+
 # Install WP
 - name: WP | Creating install directory if not present
   file:
