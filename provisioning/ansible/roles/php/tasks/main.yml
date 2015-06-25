@@ -1,10 +1,20 @@
 ---
   - name: Apt | update cache
     apt: update_cache=yes
+    when: ansible_os_family == 'Debian'
 
   - name: PHP | install php packages
     apt:
       name: "{{ item }}"
       state: installed
     with_items: php_packages
+    when: ansible_os_family == 'Debian'
+    notify: restart apache
+
+  - name: PHP | install php packages
+    yum:
+      name: "{{ item }}"
+      state: installed
+    with_items: php_packages
+    when: ansible_os_family == 'RedHat'
     notify: restart apache

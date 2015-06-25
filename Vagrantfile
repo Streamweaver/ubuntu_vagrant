@@ -13,6 +13,7 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/vivid64"
+  # config.vm.box = "relativkreativ/centos-7-minimal"
 
   # Local Provisioning Setup
   is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
@@ -20,12 +21,12 @@ Vagrant.configure(2) do |config|
     # Provisioning configuration for shell script.
     config.vm.provision "shell" do |sh|
       sh.path = "provisioning/ansible/windows.sh"
-      sh.args = "provisioning/ansible/omeka-playbook.yml"
+      sh.args = "provisioning/ansible/wordpress-playbook.yml"
     end
   else
     # Provisioning configuration for Ansible (for Mac/Linux hosts).
     config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "provisioning/ansible/omeka-playbook.yml"
+      ansible.playbook = "provisioning/ansible/wordpress-playbook.yml"
       ansible.sudo = true
     end
   end
@@ -38,7 +39,7 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 80, host: 8080
+  # config.vm.network "forwarded_port", guest: 80, host: 4567
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.

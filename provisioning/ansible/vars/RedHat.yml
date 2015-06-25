@@ -1,0 +1,4 @@
+# RedHat vars
+---
+  apache: httpd
+  mailutils: mailx

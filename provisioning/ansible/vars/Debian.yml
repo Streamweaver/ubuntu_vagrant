@@ -1,0 +1,4 @@
+# Debian vars
+---
+  apache: apache2
+  mailutils: mailutils

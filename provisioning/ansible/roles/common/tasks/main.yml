@@ -31,17 +31,23 @@
     tags: users
     lineinfile: dest=/etc/sudoers state=present regexp='^%admin ALL\=' line='%admin ALL=(ALL) NOPASSWD:ALL' validate='visudo -cf %s'
 
-  - name: Add nano for everyone.
-    tags: apps
-    apt: pkg='nano' state=present
+  - apt: pkg=nano state=latest
+    when: ansible_os_family == 'Debian'
 
-  - name: Add git for everyone
-    tags: apps
-    apt: pkg=git state=present
+  - yum: name=nano state=latest
+    when: ansible_os_family == 'RedHat'
 
-  - name: Add Unzip
-    tags: apps
-    apt: pkg=unzip state=present
+  - apt: pkg=git state=latest
+    when: ansible_os_family == 'Debian'
+
+  - yum: name=nano state=latest
+    when: ansible_os_family == 'RedHat'
+
+  - apt: pkg=unzip state=latest
+    when: ansible_os_family == 'Debian'
+
+  - yum: name=unzip state=latest
+    when: ansible_os_family == 'RedHat'
 
   - name: ensure /opt exists for any apps we want to install later.
     tags: directories
