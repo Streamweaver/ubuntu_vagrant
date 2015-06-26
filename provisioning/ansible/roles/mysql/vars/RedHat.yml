@@ -1,0 +1,8 @@
+---
+mysql_pkgs:
+  - mysql-server
+  - MySQL-python
+
+mysql_service: mysqld
+
+mysql_conf_dir: "/etc/"

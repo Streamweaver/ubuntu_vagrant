@@ -1,68 +1,49 @@
 ---
-# Config Database
-- name: WP | Create database if not present
-  mysql_db:
-    name: "{{ wp_db_name }}"
-    state: present
-    encoding: "utf8"
-    collation: "utf8_unicode_ci"
-
-- name: WP | Create database user if not present
-  mysql_user:
-    name: "{{ wp_db_user }}"
-    password: "{{ wp_db_pass}}"
-    priv: "{{ wp_db_name }}.*:ALL"
-    state: present
-
-# Sendmail Config
-- apt: pkg=mailutils state=latest
-  when: ansible_os_family == 'Debian'
-
-- yum: name=mailx state=latest
-  when: ansible_os_family == 'RedHat'
-
 # Install WP
-- name: WP | Creating install directory if not present
+- name: INSTALL | Creating install directory if not present
   file:
     path: "{{ wp_dir }}"
     state: directory
 
-- name: WP | Download wp-cli
+- name: INSTALL | Download wp-cli
   get_url:
     url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
     dest: /usr/local/bin/wp
 
-- name: WP | Set permissions on wp-cli
+- name: INSTALL | Set permissions on wp-cli
   file: path=/usr/local/bin/wp mode="0755"
 
 # Register bool if site exists to signal install to skip.
-- name: Determine if config file exists
+- name: CONFIG | Determine if config file exists
   stat: "path={{ wp_dir }}/wp-config.php"
   register: config_file
 
-- name: WP | Download wordpress
+- name: INSTALL | Download wordpress
   command: "wp core download --path={{ wp_dir }} --allow-root"
   when: config_file.stat.exists == False
 
-- name: WP | Configure wordpress
+- name: CONFIG | Configure wordpress
   command: "wp core config --allow-root --dbuser={{ wp_db_user }} --dbpass={{ wp_db_pass}} --dbname={{ wp_db_name}} --path={{ wp_dir }}"
   when: config_file.stat.exists == False
 
-- name: WP | Install Database Tables
+- name: INSTALL | Install Database Tables
   command: "wp core install --url={{ wp_url }} --title='{{ wp_title }}' --admin_user={{ wp_admin }} --admin_password={{ wp_admin_pw}} --admin_email={{ wp_admin_email }} --path={{ wp_dir }} --allow-root"
   when: config_file.stat.exists == False
 
-- name: WP | Install plugins
+- name: INSTALL | Install plugins
   command: "wp plugin install {{ item }} --activate --allow-root --path={{ wp_dir }}"
   with_items: "{{ wp_plugins }}"
 
-- name: WP | Install themes
+- name: INSTALL | Install themes
   command: "wp theme install {{ item }} --allow-root --path={{ wp_dir }}"
   with_items: "{{ wp_themes }}"
 
-- name: WP | Activate theme
+- name: CONFIG | Activate theme
   command: "wp theme activate {{ wp_theme_active }} --allow-root --path={{ wp_dir }}"
   when: wp_theme_active|default(None) != None
+
+- name: CONFIG | set permalinks in wordpress
+  command: "wp rewrite structure '/%year%/%monthnum%/%day%/%postname%/' --allow-root --path={{ wp_dir }}"
 
 # Security Config
 - name: WP | Change owner of wp directory to apache user.
@@ -76,20 +57,20 @@
 
 # securit on config.php to 0644
 - name: WP | Set permission on wp-config.php to 644
-  file: path="{{ wp_dir}}/wp-config.php" mode=0644
+  file: path="{{ wp_dir }}/wp-config.php" mode=0644
 
-# Config Apache
-- name: WP | Setup apache vhost for site
-  template:
-    src: vhost.conf.j2
-    dest: "/etc/apache2/sites-available/{{ wp_db_name }}.conf"
-    mode: 0644
-
-- name: WP | Deactivate default site
-  sudo: yes
-  command: "a2dissite 000-default"
-
-- name: WP | Activate wordpress site
-  sudo: yes
-  command: "a2ensite {{ wp_db_name }}"
-  notify: restart apache
+# # Config Apache
+# - name: WP | Setup apache vhost for site
+#   template:
+#     src: vhost.conf.j2
+#     dest: "/etc/apache2/sites-available/{{ wp_db_name }}.conf"
+#     mode: 0644
+#
+# - name: WP | Deactivate default site
+#   sudo: yes
+#   command: "a2dissite 000-default"
+#
+# - name: WP | Activate wordpress site
+#   sudo: yes
+#   command: "a2ensite {{ wp_db_name }}"
+#   notify: restart apache

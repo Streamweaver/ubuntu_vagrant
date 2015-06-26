@@ -1,3 +1,22 @@
 ---
-  a2modules_active: [] # i.e. ['rewrite', 'vhosts_alias']
-  a2modules_inactive: [] # i.e. ['rewrite', 'vhosts_alias']
+a2_siteconfig: ansible-site
+a2_port: 80
+a2_documentroot: /var/www/html
+a2_errorlog: /var/log/apache2/error.log
+a2_customlog: /var/log/apache2/access.log combined
+a2_serveradmin: webmaster@localhost
+a2modules_active: [] # i.e. ['rewrite', 'vhosts_alias']
+a2modules_inactive: [] # i.e. ['rewrite', 'vhosts_alias']
+
+a2_directories: []
+  # - name: /var/www/html
+  #   options:
+  #     - Options FollowSymLinks MultiViews Includes ExecCGI
+  #     - AllowOverride all
+  #     - Order allow,deny
+  #     - allow from all
+  #     - Require all granted
+
+a2_aliases: []
+  # - name: /mydir
+  #   path: /opt/mydir

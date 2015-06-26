@@ -1,0 +1,25 @@
+<VirtualHost *:{{ a2_port }}>
+
+    {% if a2_servername is defined %}
+    ServerName {{ a2_servername }}
+    {% endif %}
+    ServerAdmin {{ a2_serveradmin }}
+
+    DocumentRoot {{ a2_documentroot }}
+
+    {% for alias in a2_aliases %}
+    Alias {{ alias.name }} {{ alias.path }}
+    {% endfor%}
+
+    {% for dir in a2_directories %}
+    <Directory {{ dir.name }}>
+      {% for opt in dir.options %}
+      {{ opt }}
+      {% endfor %}
+    </Directory>
+    {% endfor %}
+
+    ErrorLog {{ a2_errorlog }}
+    CustomLog {{ a2_customlog }}
+
+</VirtualHost>
