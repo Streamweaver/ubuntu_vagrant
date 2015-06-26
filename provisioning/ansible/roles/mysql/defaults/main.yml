@@ -1,2 +1,10 @@
 ---
+mysql_port: 3306
 mysql_bind_address: 127.0.0.1
+# mysql_root_db_pass: String of db pass.  Set this locally or throws an error.
+
+mysql_dbs: [] # list of db names
+
+mysql_users: {} # dict of dbusers { name: baz, pass: foobar, priv "*.*:ALL"}
+
+mysql_db_id: 7

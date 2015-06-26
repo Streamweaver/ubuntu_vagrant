@@ -1,32 +1,53 @@
 ---
   - hosts: all
     user: vagrant
-    sudo: yes
+    # sudo: yes
     vars_files:
       - vars/{{ ansible_os_family }}.yml
     vars:
+      # Common vars
       playbook_name: wordpress-playbook
       ssh_users: None
       sudoers: None
       deleted_users: None
+      # Apache vars
+      a2_documentroot: /opt/testpress
+      a2_directories:
+        - name: /opt/testpress
+          options:
+              - Options FollowSymLinks MultiViews Includes ExecCGI
+              - AllowOverride all
+              - Order allow,deny
+              - allow from all
+              - Require all granted
       a2modules_active:
         - 'rewrite'
-      wp_db_user: testpress
+      # MySQL Vars
+      mysql_root_db_pass: OnlyUsedInVagrantDemo
+      mysql_dbs:
+        - wp_fireforms
+      mysql_users:
+        - name: wp_fireforms
+          pass: OnlyUsedInVagrant
+          priv: "wp_fireforms.*:ALL"
+      # Wordpress Vars
+      wp_db_user: wp_fireforms
       wp_dir: /opt/testpress
-      wp_db_name: testpress
-      wp_db_pass: onlyvagrantuse
-      wp_db_user: wptest_dbadmin
-      wp_title: "Ansible Installed WP Site"
+      wp_db_name: wp_fireforms
+      wp_db_pass: OnlyUsedInVagrant
+      wp_db_user: wp_fireforms
+      wp_title: "Henrico Division of Fire"
       wp_url: http://192.168.33.10/
-      wp_admin: wptestadmin
-      wp_admin_pw: onlyvagrantuse
+      wp_admin: wp_fireadmin
+      wp_admin_pw: DemoPasswordOnly
       wp_admin_email: set@inplaybook.com
       wp_plugins:
         - ninja-forms
         - wpmandrill
       wp_themes:
         - sparkling
-      wp_theme_active: sparkling
+        - wp-simple
+      wp_theme_active: wp-simple
     roles:
       - common
       - apache2

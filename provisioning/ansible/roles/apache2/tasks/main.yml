@@ -5,6 +5,21 @@
 - yum: name=httpd state=installed
   when: ansible_os_family == 'RedHat'
 
+- name: CONFIG | generate apache site config
+  template:
+    src: vhost.config.j2
+    dest: "/etc/apache2/sites-available/{{ a2_siteconfig }}.conf"
+    mode: 0644
+
+- name: CONFIG | Deactivate default site
+  sudo: yes
+  command: "a2dissite 000-default"
+
+- name: CONFIG | Activate wordpress site
+  sudo: yes
+  command: "a2ensite {{ a2_siteconfig }}"
+  notify: restart apache
+
 - name: Apache | Enable modules
   apache2_module: name={{ item }} state=present
   tags: apache2
