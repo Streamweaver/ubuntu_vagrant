@@ -12,8 +12,8 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "ubuntu/vivid64"
-  # config.vm.box = "relativkreativ/centos-7-minimal"
+  # config.vm.box = "ubuntu/vivid64"
+  config.vm.box = "relativkreativ/centos-7-minimal"
 
   # Local Provisioning Setup
   is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)

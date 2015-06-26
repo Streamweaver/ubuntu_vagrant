@@ -1,0 +1,4 @@
+---
+  apache_service: apache2
+  apache_sites_dir: /etc/apache2/sites-available
+  apache_user: www-data
