@@ -5,6 +5,7 @@ a2_documentroot: /var/www/html
 a2_errorlog: /var/log/apache2/error.log
 a2_customlog: /var/log/apache2/access.log combined
 a2_serveradmin: webmaster@localhost
+a2_rules: [] # i.e. ['RewriteEngine on', 'RewriteRule ...']
 a2modules_active: [] # i.e. ['rewrite', 'vhosts_alias']
 a2modules_inactive: [] # i.e. ['rewrite', 'vhosts_alias']
 

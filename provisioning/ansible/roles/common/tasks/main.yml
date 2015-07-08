@@ -1,7 +1,7 @@
 ---
   # Make sure apt cache is up to date
   - name: update apt cache
-    apt: udpate_cache=yes
+    apt: update_cache=yes
     when: ansible_os_family == 'Debian'
 
   # Message of the Day on the machine.

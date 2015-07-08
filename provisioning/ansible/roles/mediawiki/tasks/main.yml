@@ -1,71 +1,45 @@
-- name: DB | Create database if not present
-  tags: db
-  mysql_db:
-    name: "{{ mw_db_name }}"
-    state: present
-    encoding: "utf8"
-    collation: "utf8_unicode_ci"
-
-- name: DB | Create database user if not present
-  tags: db
-  mysql_user:
-    name: "{{ mw_db_user }}"
-    password: "{{ mw_db_password}}"
-    priv: "{{ mw_db_name }}.*:ALL"
-    state: present
-
 # Install Mediawiki
 
-- name: INSTALL | Install media wiki via apt/get
-  apt: pkg=mediawiki state=present
+- name: INSTALL | Install imagemagic via apt/get
+  apt: pkg=imagemagick state=present
   tags: install
 
-# edit line https://help.ubuntu.com/community/MediaWiki
-- name: INSTALL | Configure apache.conf file
+
+
+- name: INSTALL | Clone latest version of Mediawiki from GitHub
+  tags: install
+  git:
+    repo: https://gerrit.wikimedia.org/r/p/mediawiki/core.git
+    dest: "{{ mw_dir }}"
+    depth: 1
+    update: no
+
+- name: INSTALL | Create LocalSettings.php file in root
   tags: install
   template:
-    src: mw_apache.conf.j2
-    dest: /etc/mediawiki/apache.conf
-    mode: 0644
-    owner: root
+    src: LocalSettings.php.j2
+    dest: "{{ mw_dir }}/LocalSettings.php"
+    mode: 0600
     group: root
+    owner: root
 
-# - name: INSTALL | Create LocalSettings.php file in root
-#   tags: install
-#   template:
-#     src: LocalSettings.php.j2
-#     dest: /var/lib/mediawiki/LocalSettings.php
-#     mode: 0600
-#     group: root
-#     owner: root
+# Add Henrico Seal
+- name: CONFIGURE | Add logo
+  copy:
+    src: "../../../files/HenricoSealShare.png"
+    dest: "{{ mw_dir }}/images/HenricoSealShare.png"
+    mode: 0755
 
-# sudo a2enconf mediawiki
-- name: INSTALL | Enable apache config
-  tags: install
-  command: a2enconf mediawiki
-  notify:
-    - restart apache
-
-#  Below is not needed, was the start of a git install and went wit apt instead
-# sudo service apache2 reload
-
-# - name: INSTALL | Clone latest version of Mediawiki from GitHub
-#   tags: install
-#   git:
-#     repo: https://gerrit.wikimedia.org/r/p/mediawiki/core.git
-#     dest: "{{ mw_dir }}"
-#     depth: 1
-
-# # Security Config
-# - name: SECURITY | Change owner of wp directory to apache user.
-#   tags: security
-#   file:
-#     path: "{{ mw_dir }}"
-#     state: directory
-#     mode: 0755
-#     recurse: yes
-#     owner: www-data
-#     group: www-data
+# Security Config
+- name: SECURITY | Change owner of wp directory to apache user.
+  tags: security
+  file:
+    path: "{{ mw_dir }}"
+    state: directory
+    mode: 0755
+    recurse: yes
+    owner: www-data
+    group: www-data
 
 
 # Config Apache

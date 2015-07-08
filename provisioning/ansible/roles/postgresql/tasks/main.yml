@@ -1,0 +1,16 @@
+---
+  - name: INSTALL | base packages
+    apt: name="{{ item }}" state=present
+    with_items: pg_pkgs
+
+  - name: DATABASE | create the databases
+    postgresql_db:
+      name: "{{ item }}"
+      encoding: 'UTF8'
+    with_items: pg_dbs
+
+  - name: SECURITY | ensure no unsafe premissions for reqular db users
+    postgresql_user:
+      name: "{{ item.name }}"
+      role_attr_flags: "NOSUPERUSER,NOCREATEROLE,NOCREATEUSER,NOCREATEDB,NOREPLICATION"
+    with_items: pg_dbusers

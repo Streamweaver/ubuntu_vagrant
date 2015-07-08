@@ -21,12 +21,12 @@ Vagrant.configure(2) do |config|
     # Provisioning configuration for shell script.
     config.vm.provision "shell" do |sh|
       sh.path = "provisioning/ansible/windows.sh"
-      sh.args = "provisioning/ansible/wordpress-playbook.yml"
+      sh.args = "provisioning/ansible/utility-playbook.yml"
     end
   else
     # Provisioning configuration for Ansible (for Mac/Linux hosts).
     config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "provisioning/ansible/wordpress-playbook.yml"
+      ansible.playbook = "provisioning/ansible/utility-playbook.yml"
       ansible.sudo = true
     end
   end

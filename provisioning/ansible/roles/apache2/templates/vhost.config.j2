@@ -7,6 +7,10 @@
 
     DocumentRoot {{ a2_documentroot }}
 
+    {% for rule in a2_rules %}
+    {{ rule }}
+    {% endfor %}
+
     {% for alias in a2_aliases %}
     Alias {{ alias.name }} {{ alias.path }}
     {% endfor%}
