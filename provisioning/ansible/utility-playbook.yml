@@ -11,15 +11,17 @@
       sudoers: None
       deleted_users: None
       # Apache vars
-      a2_rules:
-        - RewriteEngine on
-        - "RewriteRule (.*) /opt/mediawiki/$1"
       a2_aliases:
         - name: /blog
           path: /opt/wordpress
         - name: /wiki
-          path: /opt/mediawiki
+          path: /opt/dokuwiki
       a2_directories:
+        - name: /
+          options:
+            - Options FollowSymLinks
+            - AllowOverride None
+            - Require all denied
         - name: /opt/wordpress
           options:
               - Options FollowSymLinks MultiViews Includes ExecCGI
@@ -27,57 +29,38 @@
               - Order allow,deny
               - Allow from all
               - Require all granted
-        - name: /opt/mediawiki
+        - name: /opt/dokuwiki
           options:
-              - Options +FollowSymLinks
-              - AllowOverride All
-              - Order allow,deny
-              - Allow from all
-        - name: /opt/mediawiki/config
+            - Options Indexes FollowSymLinks MultiViews
+            - AllowOverride none
+            - Order allow,deny
+            - allow from all
+            - Require all granted
+      a2_locationmatches:
+        - name: "/(data|conf|bin|inc)/"
           options:
-            - "Options -FollowSymLinks"
-            - AllowOverride None
-            - "<IfModule mod_php5.c>"
-            - "php_admin_flag engine off"
-            - "</IfModule>"
-        - name: /opt/mediawiki/images
-          options:
-            - "Options -FollowSymLinks"
-            - AllowOverride None
-            - "<IfModule mod_php5.c>"
-            - "php_admin_flag engine off"
-            - "</IfModule>"
-        - name: /opt/mediawiki/upload
-          options:
-            - "Options -FollowSymLinks"
-            - AllowOverride None
-            - "<IfModule mod_php5.c>"
-            - "php_admin_flag engine off"
-            - "</IfModule>"
+            - Order allow,deny
+            - Deny from all
+            - Satisfy All
       a2modules_active:
         - 'rewrite'
       # mysql vars
       mysql_root_db_pass: OnlyUsedInVagrantDemo
       mysql_dbs:
         - wp_fireforms
-        - wiki
       mysql_users:
         - name: wp_fireforms
           db: wp_fireforms
           pass: OnlyUsedInVagrant
           priv: "wp_fireforms.*:ALL"
-        - name: wikiuser
-          db: wiki
-          pass: WikiInVagrantOnly
-          priv: "wiki.*:ALL"
       # Wordpress Vars
       wp_db_user: wp_fireforms
-      wp_dir: /opt/testpress
+      wp_dir: /opt/wordpress
       wp_db_name: wp_fireforms
       wp_db_pass: OnlyUsedInVagrant
       wp_db_user: wp_fireforms
       wp_title: "Henrico Division of Fire"
-      wp_url: http://192.168.33.10/
+      wp_url: http://192.168.33.10/blog
       wp_admin: wp_fireadmin
       wp_admin_pw: DemoPasswordOnly
       wp_admin_email: set@inplaybook.com
@@ -87,17 +70,12 @@
       wp_themes:
         - wp-simple
       wp_theme_active: wp-simple
-      # Mediawiki Vars
-      mw_dir: /opt/mediawiki
-      mw_site_name: "Division of Fire Wiki"
-      mw_namespace: "Division_of_Fire_Wiki"
-      mw_scriptpath: /wiki
-      mw_server: http://192.168.33.10/mediawiki/
-      mw_logo: /opt/mediawiki/images/HenricoSealShare.png
+      # DokuWiki Vars
+      dw_dir: /opt/dokuwiki
     roles:
       - common
       - apache2
       - mysql
       - php
       - wordpress
-      - mediawiki
+      - dokuwiki

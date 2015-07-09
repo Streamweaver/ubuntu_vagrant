@@ -23,6 +23,14 @@
     </Directory>
     {% endfor %}
 
+    {% for loc in a2_locationmatches %}
+    <LocationMatch "{{ loc.name }}">
+       {% for opt in loc.options %}
+       {{ opt }}
+       {% endfor %}
+    </LocationMatch>
+    {% endfor %}
+
     ErrorLog {{ a2_errorlog }}
     CustomLog {{ a2_customlog }}
 

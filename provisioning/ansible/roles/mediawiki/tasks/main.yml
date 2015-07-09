@@ -4,8 +4,6 @@
   apt: pkg=imagemagick state=present
   tags: install
 
-
-
 - name: INSTALL | Clone latest version of Mediawiki from GitHub
   tags: install
   git:
@@ -14,21 +12,20 @@
     depth: 1
     update: no
 
-- name: INSTALL | Create LocalSettings.php file in root
-  tags: install
-  template:
-    src: LocalSettings.php.j2
-    dest: "{{ mw_dir }}/LocalSettings.php"
-    mode: 0600
-    group: root
-    owner: root
+- name: INSTALL | Install composer php dependency manager
+  command: "curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer"
 
-# Add Henrico Seal
-- name: CONFIGURE | Add logo
-  copy:
-    src: "../../../files/HenricoSealShare.png"
-    dest: "{{ mw_dir }}/images/HenricoSealShare.png"
-    mode: 0755
+- name: CONFIGURE | Determin if composer lock file exists
+  stat: "{{ mw_dir }}/composer.lock"
+  register: composer_lock
+
+- name: INSTALL | Execute composer for php dependencies
+  command: "composer install --no-dev"
+  when: composer_lock.exists == False
+
+- name: UPDATE | Update composer php dependencies
+  command: "composer update --no-dev"
+  when: composer_lock.exists == True
 
 # Security Config
 - name: SECURITY | Change owner of wp directory to apache user.
@@ -40,23 +37,3 @@
     recurse: yes
     owner: www-data
     group: www-data
-
-
-# Config Apache
-# - name: APACHE | Setup apache vhost for site
-#   tags: apache
-#   template:
-#     src: vhost.conf.j2
-#     dest: "/etc/apache2/sites-available/{{ mw_db_name }}.conf"
-#     mode: 0644
-#
-# - name: APACHE | Deactivate default site
-#   tags: apache
-#   sudo: yes
-#   command: "a2dissite 000-default"
-#
-# - name: APACHE | Activate wordpress site
-#   tags: apache
-#   sudo: yes
-#   command: "a2ensite {{ mw_db_name }}"
-#   notify: restart apache
