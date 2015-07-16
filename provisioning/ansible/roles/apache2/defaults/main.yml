@@ -17,7 +17,12 @@ a2_directories: []
   #     - Order allow,deny
   #     - allow from all
   #     - Require all granted
-
+a2_locationmatches: []
+  # - name: "/(data|conf|bin|inc)/"
+  # - options:
+  #     - Order allow,deny
+  #     - Deny from all
+  #     - Satisfy All
 a2_aliases: []
   # - name: /mydir
   #   path: /opt/mydir
