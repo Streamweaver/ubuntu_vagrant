@@ -22,6 +22,10 @@
       dest: /opt
     when: dw_install.stat.exists == False
 
+  - name: INSTALL | move unarchived diretory to dokuwiki root location
+    shell: "mv /opt/dokuwiki-* {{ dw_dir }}"
+    when: dw_install.stat.exists == False
+
   - name: CONFIG | own all files to the webapp
     file:
       path: "{{ dw_dir }}"

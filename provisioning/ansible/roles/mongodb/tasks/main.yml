@@ -1,0 +1,14 @@
+---
+  - name: INSTALL | add mongodb gpg key to apt cache
+    command: apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+
+  - name: INSTALL | create the sources list
+    command: echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+
+  - name: UPDATE | update apt cache
+    apt: update_cache=yes
+
+  - name: INSTALL | install main mongodb package
+    apt: pkg=mongodb-org
+    notify:
+      - start mongodb

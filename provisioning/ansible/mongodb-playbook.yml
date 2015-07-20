@@ -1,0 +1,15 @@
+---
+  - hosts: all
+    user: vagrant
+    # sudo: yes
+    vars_files:
+      - vars/{{ ansible_os_family }}.yml
+    vars:
+      # Common vars
+      playbook_name: mongodb-playbook
+      ssh_users: None
+      sudoers: None
+      deleted_users: None
+    roles:
+      - common
+      - mongodb
