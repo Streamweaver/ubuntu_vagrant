@@ -1,0 +1,10 @@
+---
+  - name: YUM | clean all
+    command: yum clean all
+
+  - name: YUM | update
+    command: yum -y update
+
+  - name: YUM | install base packages
+    yum: name={{ item }} state=latest
+    with_items: common_pkgs

@@ -1,9 +1,7 @@
 ---
-  - name: Apt | update cache
-    apt: update_cache=yes
-    when: ansible_os_family == 'Debian'
+  - include_vars: "{{ ansible_os_family}}.yml"
 
-  - name: PHP | install php packages
+  - name: APT | install php packages
     apt:
       name: "{{ item }}"
       state: installed
@@ -11,7 +9,19 @@
     when: ansible_os_family == 'Debian'
     notify: restart apache
 
-  - name: PHP | install php packages
+  - name: RPM | get php-mcrypt repo file
+    get_url:
+      url: http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+      dest: /tmp/epel-release-7-2.noarch.rpm
+    when: ansible_os_family == 'RedHat'
+
+  - name: RPM | Add third-party sources to repository list
+    command: "rpm -Uvh /tmp/epel-release-7-2.noarch.rpm"
+    when: ansible_os_family == 'RedHat'
+    register: epel_repo_result
+    failed_when: "'conflict' in epel_repo_result.stderr"
+
+  - name: YUM | install php packages
     yum:
       name: "{{ item }}"
       state: installed

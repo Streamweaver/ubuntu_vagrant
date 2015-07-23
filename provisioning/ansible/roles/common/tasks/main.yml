@@ -36,29 +36,13 @@
     tags: users
     lineinfile: dest=/etc/sudoers state=present regexp='^%admin ALL\=' line='%admin ALL=(ALL) NOPASSWD:ALL' validate='visudo -cf %s'
 
-  - apt: pkg=nano state=latest
-    when: ansible_os_family == 'Debian'
-
-  - yum: name=nano state=latest
-    when: ansible_os_family == 'RedHat'
-
-  - apt: pkg=git state=latest
-    when: ansible_os_family == 'Debian'
-
-  - yum: name=nano state=latest
-    when: ansible_os_family == 'RedHat'
-
-  - apt: pkg=unzip state=latest
-    when: ansible_os_family == 'Debian'
-
-  - yum: name=unzip state=latest
-    when: ansible_os_family == 'RedHat'
-
-  - name: ensure /opt exists for any apps we want to install later.
-    tags: directories
-    file: path=/opt state=directory mode=0755 owner=root group=root
-
   - name: remove designated users
     tags: users
     user: name="{{ item }}" state=absent
     with_items: "{{ deleted_users }}"
+
+  - include: RedHat.yml
+    when: ansible_os_family == 'RedHat'
+
+  - include: Debian.yml
+    when: ansible_os_family == 'Debian'

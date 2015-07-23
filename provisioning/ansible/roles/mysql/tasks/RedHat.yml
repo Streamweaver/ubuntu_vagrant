@@ -1,0 +1,9 @@
+---
+    - name: INSTALL | YUM packages
+      yum: name={{ item }} state=installed
+      with_items: "{{ mysql_pkgs }}"
+      when: ansible_os_family == 'RedHat'
+
+    - name:  CONFIGURE | start and enable mysql on RedHat
+      service: name={{ mysql_service }} state=started enabled=yes
+      when: ansible_os_family == 'RedHat'

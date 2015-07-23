@@ -1,0 +1,4 @@
+---
+  - name: INSTALL | base packages
+    apt: pkg={{ item }} state=latest
+    with_items: common_pkgs

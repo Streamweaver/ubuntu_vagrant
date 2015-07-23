@@ -1,0 +1,33 @@
+---
+  - name: INSTALL | apt-get apache2
+    apt: pkg=apache2 state=installed
+
+  - name: CONFIG | generate apache site config
+    template:
+      src: vhost.config.j2
+      dest: "{{ apache_sites_dir }}/{{ a2_siteconfig }}.conf"
+      mode: 0644
+
+  - name: CONFIG | Deactivate default site
+    sudo: yes
+    command: "a2dissite 000-default"
+
+  - name: CONFIG | Activate site config
+    command: "a2ensite {{ a2_siteconfig }}"
+    notify: restart apache
+
+  - name: Apache | Enable modules
+    apache2_module: name={{ item }} state=present
+    tags: apache2
+    when: a2modules_active
+    with_items: "{{ a2modules_active }}"
+    notify:
+      - restart apache
+
+  - name: Apache | Disable modules
+    apache2_module: name={{ item }} state=absent
+    tags: apache2
+    when: a2modules_inactive
+    with_items: "{{ a2modules_inactive }}"
+    notify:
+      - restart apache
