@@ -1,7 +1,7 @@
 ---
   - hosts: all
     user: vagrant
-    # sudo: yes
+    sudo: yes
     vars_files:
       - vars/{{ ansible_os_family }}.yml
     vars:
@@ -74,8 +74,8 @@
       dw_dir: /opt/dokuwiki
     roles:
       - common
+      - php
       - apache2
       - mysql
-      - php
       # - wordpress
       # - dokuwiki

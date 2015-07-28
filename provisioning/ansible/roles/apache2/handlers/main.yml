@@ -1,6 +1,6 @@
 ---
 - name: start apache
-  service: name={{{ apache_service}}} state=started
+  service: name={{ apache_service }} state=started
 
 - name: restart apache
   service: name={{ apache_service }} state=restarted
@@ -9,4 +9,4 @@
   service: name={{ apache_service }} state=reloaded
 
 - name: enable apache
-  service: name={{ apache_service }} state=enabled
+  service: name={{ apache_service }} state=started enabled=yes

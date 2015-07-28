@@ -12,42 +12,56 @@
   - name: CONFIGURE directory /etc/mysql/conf.d created
     file: path=/etc/mysql/conf.d state=directory
 
+  # Next two tasks borrowed from https://github.com/geerlingguy/ansible-role-mysql/blob/master/tasks/secure-installation.yml
+  - name: Get list of hosts for the root user.
+    command: mysql -NBe 'SELECT Host FROM mysql.user WHERE User = "root" ORDER BY (Host="localhost") ASC'
+    register: mysql_root_hosts
+    changed_when: false
+
+  # 'localhost' needs to be last for idempotency.
+  - name: Update MySQL root password for localhost root account.
+    mysql_user:
+      name: "root"
+      host: "{{ item }}"
+      password: "{{ mysql_root_db_pass }}"
+    with_items: mysql_root_hosts.stdout_lines
+
+  # - name: SECURITY | update mysql root password for all root accounts
+  #   mysql_user:
+  #     name: root
+  #     host: "{{ item }}"
+  #     password: "{{ mysql_root_db_pass }}"
+  #     # login_user: root
+  #     # login_password: "{{ mysql_root_db_pass }}"
+  #   with_items:
+  #    - 127.0.0.1
+  #    - ::1
+  #    - localhost
+  #   when: ansible_hostname != 'localhost'
+
 # NOTE these MUST come after the pw reset above.
   - name: CONFIGURE | copy central mysql my.cnf file
     template:
       src: "my.cnf.{{ ansible_os_family }}.j2"
       dest: "{{ mysql_conf_dir}}/my.cnf"
+    notify:
+      - restart mysql
 
   - name: CONFIGURE | copy .my.cnf with root password to ansible user
     template:
       src: my.cnf.j2
-      dest: /home/vagrant/.my.cnf
+      dest: "{{ mysql_user_home }}/.my.cnf"
       group: vagrant
       owner: vagrant
       mode: 0600
-    notify:
-      - restart mysql
-
-  - name: SECURITY | update mysql root password for all root accounts
-    mysql_user:
-      name: root
-      host: "{{ item }}"
-      password: "{{ mysql_root_db_pass }}"
-      login_user: root
-      login_password: "{{ mysql_root_db_pass }}"
-    with_items:
-     - 127.0.0.1
-     - ::1
-     - localhost
-    when: ansible_hostname != 'localhost'
 
   - name: SECURITY | remove all anonymous MySQL Users
     mysql_user:
       name: ''
       host: "{{ item }}"
       state: absent
-      login_user: root
-      login_password: "{{ mysql_root_db_pass }}"
+      # login_user: root
+      # login_password: "{{ mysql_root_db_pass }}"
     with_items:
       - localhost
 
@@ -65,6 +79,6 @@
       priv: "{{ item.priv }}"
       state: present
       host: "{{ item.host | default('localhost') }}"
-      login_user: root
-      login_password: "{{ mysql_root_db_pass }}"
+      # login_user: root
+      # login_password: "{{ mysql_root_db_pass }}"
     with_items: "{{ mysql_users }}"
