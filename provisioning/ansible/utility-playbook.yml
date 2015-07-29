@@ -76,6 +76,6 @@
       - common
       - php
       - apache2
-      - mysql
+      # - mysql
       # - wordpress
       # - dokuwiki

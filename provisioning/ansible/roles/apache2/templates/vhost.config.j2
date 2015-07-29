@@ -1,8 +1,15 @@
+{% if a2_dirindex is defined %}
+DirectoryIndex {{ a2_dirindex }}
+
+{% endif %}
 <VirtualHost *:{{ a2_port }}>
 
-    {% if a2_servername is defined %}
+{% if a2_servername is defined %}
     ServerName {{ a2_servername }}
-    {% endif %}
+{% endif %}
+{% if a2_serveralias is defined %}
+    ServerAlias {{ a2_serveralias }}
+{% endif %}
     ServerAdmin {{ a2_serveradmin }}
 
     DocumentRoot {{ a2_documentroot }}
@@ -31,7 +38,11 @@
     </LocationMatch>
     {% endfor %}
 
+{% if a2_errorlog is defined %}
     ErrorLog {{ a2_errorlog }}
+{% endif %}
+{% if a2_customlog is defined %}
     CustomLog {{ a2_customlog }}
+{% endif %}
 
 </VirtualHost>

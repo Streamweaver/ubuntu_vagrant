@@ -3,49 +3,7 @@
     yum: name={{ item }} state=installed
     with_items: apache_pkgs
     notify:
-      - start apache
       - enable apache
 
   - name: FIREWALL | open http service port
     firewalld: service=http permanent=true state=enabled
-
-  # - name: CONFIG | make sure apache dir exists
-  #   file:
-  #     path: "{{ apache_sites_dir }}"
-  #     state: directory
-  #     mode: 0644
-
-  # - name: CONFIG | generate apache site config
-  #   template:
-  #     src: vhost.config.j2
-  #     dest: "{{ apache_sites_dir }}/{{ a2_siteconfig }}.conf"
-  #     owner: root
-  #     group: root
-  #     mode: 0644
-  #
-  # - name: CONFIG | Deactivate default site
-  #   sudo: yes
-  #   command: "a2dissite 000-default"
-  #   when: ansible_os_family == 'Debian'
-  #
-  # - name: CONFIG | Activate wordpress site
-  #   sudo: yes
-  #   command: "a2ensite {{ a2_siteconfig }}"
-  #   when: ansible_os_family == 'Debian'
-  #   notify: restart apache
-  #
-  # - name: Apache | Enable modules
-  #   apache2_module: name={{ item }} state=present
-  #   tags: apache2
-  #   when: ansible_os_family == 'Debian' and a2modules_active
-  #   with_items: "{{ a2modules_active }}"
-  #   notify:
-  #     - restart apache
-  #
-  # - name: Apache | Disable modules
-  #   apache2_module: name={{ item }} state=absent
-  #   tags: apache2
-  #   when: ansible_os_family == 'Debian' a2modules_inactive
-  #   with_items: "{{ a2modules_inactive }}"
-  #   notify:
-  #     - restart apache
