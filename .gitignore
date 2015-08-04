@@ -3,3 +3,4 @@
 credentials/
 *.pub
 perlstuff/*
+/secretvars/secretvars.yml

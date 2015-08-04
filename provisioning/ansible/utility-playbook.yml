@@ -4,9 +4,10 @@
     sudo: yes
     vars_files:
       - vars/{{ ansible_os_family }}.yml
+      - secretvars/secretvars.yml
     vars:
       # Common vars
-      playbook_name: utility-playbook
+      playbook_name: "utility_playbook"
       ssh_users: None
       sudoers: None
       deleted_users: None
@@ -25,14 +26,14 @@
         - name: /opt/wordpress
           options:
               - Options FollowSymLinks MultiViews Includes ExecCGI
-              - AllowOverride all
+              - AllowOverride All
               - Order allow,deny
               - Allow from all
               - Require all granted
         - name: /opt/dokuwiki
           options:
             - Options Indexes FollowSymLinks MultiViews
-            - AllowOverride none
+            - AllowOverride None
             - Order allow,deny
             - allow from all
             - Require all granted
@@ -45,24 +46,24 @@
       a2modules_active:
         - 'rewrite'
       # mysql vars
-      mysql_root_db_pass: OnlyUsedInVagrantDemo
+      mysql_root_db_pass: "{{ _mysql_root_db_pass }}"
       mysql_dbs:
         - wp_fireforms
       mysql_users:
         - name: wp_fireforms
           db: wp_fireforms
-          pass: OnlyUsedInVagrant
+          pass: "{{ _wp_db_pass }}"
           priv: "wp_fireforms.*:ALL"
       # Wordpress Vars
       wp_db_user: wp_fireforms
       wp_dir: /opt/wordpress
       wp_db_name: wp_fireforms
-      wp_db_pass: OnlyUsedInVagrant
+      wp_db_pass: "{{ _wp_db_pass }}"
       wp_db_user: wp_fireforms
       wp_title: "Henrico Division of Fire"
       wp_url: http://192.168.33.10/blog
       wp_admin: wp_fireadmin
-      wp_admin_pw: DemoPasswordOnly
+      wp_admin_pw: "{{ _wp_admin_pw }}"
       wp_admin_email: set@inplaybook.com
       wp_plugins:
         - ninja-forms
@@ -70,12 +71,14 @@
       wp_themes:
         - wp-simple
       wp_theme_active: wp-simple
+      wp_app_user: "{{ apache_user }}"
+      wp_app_group: "{{ apache_user }}"
       # DokuWiki Vars
       dw_dir: /opt/dokuwiki
     roles:
       - common
       - php
       - apache2
-      # - mysql
-      # - wordpress
+      - mysql
+      - wordpress
       # - dokuwiki

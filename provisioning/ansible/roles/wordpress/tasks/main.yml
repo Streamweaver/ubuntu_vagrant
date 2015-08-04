@@ -5,45 +5,25 @@
     path: "{{ wp_dir }}"
     state: directory
 
+- stat: path=/user/bin/wp
+  register: wp_cli
+
 - name: INSTALL | Download wp-cli
   get_url:
     url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-    dest: /usr/local/bin/wp
+    dest: /usr/bin/wp
+  when: wp_cli.stat.exists == False
 
 - name: INSTALL | Set permissions on wp-cli
-  file: path=/usr/local/bin/wp mode="0755"
+  file: path=/usr/bin/wp mode="0755"
 
 # Register bool if site exists to signal install to skip.
 - name: CONFIG | Determine if config file exists
-  stat: "path={{ wp_dir }}/wp-config.php"
+  stat: "path={{ wp_dir }}/index.php"
   register: config_file
 
-- name: INSTALL | Download wordpress
-  command: "wp core download --path={{ wp_dir }} --allow-root"
+- include: install-wp.yml
   when: config_file.stat.exists == False
-
-- name: CONFIG | Configure wordpress
-  command: "wp core config --allow-root --dbuser={{ wp_db_user }} --dbpass={{ wp_db_pass}} --dbname={{ wp_db_name}} --path={{ wp_dir }}"
-  when: config_file.stat.exists == False
-
-- name: INSTALL | Install Database Tables
-  command: "wp core install --url={{ wp_url }} --title='{{ wp_title }}' --admin_user={{ wp_admin }} --admin_password={{ wp_admin_pw}} --admin_email={{ wp_admin_email }} --path={{ wp_dir }} --allow-root"
-  when: config_file.stat.exists == False
-
-- name: INSTALL | Install plugins
-  command: "wp plugin install {{ item }} --activate --allow-root --path={{ wp_dir }}"
-  with_items: "{{ wp_plugins }}"
-
-- name: INSTALL | Install themes
-  command: "wp theme install {{ item }} --allow-root --path={{ wp_dir }}"
-  with_items: "{{ wp_themes }}"
-
-- name: CONFIG | Activate theme
-  command: "wp theme activate {{ wp_theme_active }} --allow-root --path={{ wp_dir }}"
-  when: wp_theme_active|default(None) != None
-
-- name: CONFIG | set permalinks in wordpress
-  command: "wp rewrite structure '/%year%/%monthnum%/%day%/%postname%/' --allow-root --path={{ wp_dir }}"
 
 # Security Config
 - name: WP | Change owner of wp directory to apache user.
@@ -52,25 +32,9 @@
     state: directory
     mode: 0755
     recurse: yes
-    owner: www-data
-    group: www-data
+    owner: "{{ wp_app_user }}"
+    group: "{{ wp_app_group }}"
 
 # securit on config.php to 0644
 - name: WP | Set permission on wp-config.php to 644
   file: path="{{ wp_dir }}/wp-config.php" mode=0644
-
-# # Config Apache
-# - name: WP | Setup apache vhost for site
-#   template:
-#     src: vhost.conf.j2
-#     dest: "/etc/apache2/sites-available/{{ wp_db_name }}.conf"
-#     mode: 0644
-#
-# - name: WP | Deactivate default site
-#   sudo: yes
-#   command: "a2dissite 000-default"
-#
-# - name: WP | Activate wordpress site
-#   sudo: yes
-#   command: "a2ensite {{ wp_db_name }}"
-#   notify: restart apache

@@ -13,3 +13,5 @@
   wp_themes:
     - twentyfifteen
   wp_theme_active: twentyfifteen
+  wp_app_user: www-data
+  wp_app_group: "{{ wp_app_user }}"
