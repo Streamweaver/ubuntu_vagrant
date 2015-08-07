@@ -1,3 +1,5 @@
 ---
   dw_tempdir: /tmp
   dw_dir: /opt/dokuwiki
+  dw_app_user: www-data
+  dw_app_group: www-data

@@ -17,11 +17,11 @@
   #
   - name: add ssh users
     user:
-      name="{{ item.name }}"
-      state=present
-      groups=admin,
-      shell='/bin/bash'
-      password='!'
+      name: "{{ item.name }}"
+      state: present
+      groups: admin,
+      shell: '/bin/bash'
+      password: '!'
     tags: users
     when: ssh_users
     with_items: "{{ ssh_users }}"

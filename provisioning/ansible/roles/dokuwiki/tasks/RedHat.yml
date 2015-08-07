@@ -1,0 +1,8 @@
+---
+  - name: DEPS | Installing system dependencies.
+    yum: name={{ item }} state=present
+    with_items:
+      - ImageMagick
+      - ImageMagick-devel
+      - unzip
+      - gzip

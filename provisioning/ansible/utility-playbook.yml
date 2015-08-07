@@ -8,13 +8,15 @@
     vars:
       # Common vars
       playbook_name: "utility_playbook"
-      ssh_users: None
-      sudoers: None
+      ssh_users:
+          - name: streamweaver
+            keyfile: public_keys/scott.turnbull.henrico.id_rsa.pub
+      sudoers:
+        - streamweaver
       deleted_users: None
       # Apache vars
+      a2_documentroot: /opt/wordpress
       a2_aliases:
-        - name: /blog
-          path: /opt/wordpress
         - name: /wiki
           path: /opt/dokuwiki
       a2_directories:
@@ -61,13 +63,14 @@
       wp_db_pass: "{{ _wp_db_pass }}"
       wp_db_user: wp_fireforms
       wp_title: "Henrico Division of Fire"
-      wp_url: http://192.168.33.10/blog
+      wp_url: http://192.168.33.10
       wp_admin: wp_fireadmin
       wp_admin_pw: "{{ _wp_admin_pw }}"
       wp_admin_email: set@inplaybook.com
       wp_plugins:
         - ninja-forms
         - wpmandrill
+        - active-directory-integration
       wp_themes:
         - wp-simple
       wp_theme_active: wp-simple
@@ -75,10 +78,12 @@
       wp_app_group: "{{ apache_user }}"
       # DokuWiki Vars
       dw_dir: /opt/dokuwiki
+      dw_app_user: "{{ apache_user }}"
+      dw_app_group: "{{ apache_user }}"
     roles:
       - common
       - php
       - apache2
       - mysql
       - wordpress
-      # - dokuwiki
+      - dokuwiki

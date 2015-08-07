@@ -13,3 +13,5 @@
       src: vhost.config.j2
       dest: "{{ apache_sites_dir }}/{{ a2_siteconfig }}.conf"
       mode: 0644
+    notify:
+      - restart apache

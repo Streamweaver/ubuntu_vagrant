@@ -4,3 +4,4 @@ credentials/
 *.pub
 perlstuff/*
 /secretvars/secretvars.yml
+/provisioning/ansible/public_keys/

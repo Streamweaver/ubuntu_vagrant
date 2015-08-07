@@ -3,4 +3,6 @@
 playbook_name: "COMMON ROLE **Set playbook var**"
 ssh_users: ""
 sudoers: ""
+  # - name: Streamweaver
+  #   keyfile: public_keys/scott.turnbull.henrico.id_rsa.pub
 deleted_uers: ""

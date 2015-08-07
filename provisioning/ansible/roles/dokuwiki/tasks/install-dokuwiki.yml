@@ -1,0 +1,13 @@
+---
+  - name: INSTALL | download latest stable build
+    get_url:
+      url: http://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz
+      dest: "{{ dw_tempdir }}/dokuwiki-stable.tgz"
+
+  - name: INSTALL | extract stable build to destination
+    unarchive:
+      src:  "{{ dw_tempdir }}/dokuwiki-stable.tgz"
+      dest: /opt
+
+  - name: INSTALL | move unarchived diretory to dokuwiki root location
+    shell: "mv /opt/dokuwiki-* {{ dw_dir }}"

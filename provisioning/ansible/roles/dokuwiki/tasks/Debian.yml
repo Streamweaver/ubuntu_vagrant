@@ -1,0 +1,7 @@
+---
+  - name: DEPS | Installing system dependencies.
+    apt: pkg={{ item }} state=present
+    with_items:
+      - imagemagick
+      - unzip
+      - gzip
