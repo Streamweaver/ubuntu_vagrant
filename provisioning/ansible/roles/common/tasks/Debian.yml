@@ -1,4 +1,15 @@
 ---
+  - name: INSTALL | update apt cache
+    apt: update_cache=yes
+
   - name: INSTALL | base packages
     apt: pkg={{ item }} state=latest
     with_items: common_pkgs
+
+  - name: Modifiy admins so they need no sudo password
+    tags: users
+    lineinfile:
+      dest: /etc/sudoers state=present
+      regexp: '^%admin ALL\='
+      line: '%admin ALL=(ALL) NOPASSWD:ALL'
+      validate: 'visudo -cf %s'

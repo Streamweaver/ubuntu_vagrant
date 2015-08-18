@@ -8,3 +8,21 @@
   - name: YUM | install base packages
     yum: name={{ item }} state=latest
     with_items: common_pkgs
+
+  - name: SUDO | remove requirement for password from sudoers
+    tags: users
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^#?\s*%wheel\s*ALL\=\(ALL\)\s*ALL\s*$'
+      line: '#%wheel        ALL=(ALL)       ALL'
+      validate: 'visudo -cf %s'
+
+  - name: SUDO | add nopass attribute to sudoers
+    tags: users
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^#?\s*%wheel\s*ALL\=\(ALL\)\s*NOPASSWD\:\s*ALL\s*$'
+      line: '%wheel  ALL=(ALL)       NOPASSWD: ALL'
+      validate: 'visudo -cf %s'

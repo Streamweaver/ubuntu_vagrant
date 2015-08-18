@@ -9,13 +9,13 @@
     when: ansible_os_family == 'Debian'
     notify: restart apache
 
-  - name: RPM | get php-mcrypt repo file
+  - name: YUM | get php-mcrypt repo file
     get_url:
       url: http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
       dest: /tmp/epel-release-7-2.noarch.rpm
     when: ansible_os_family == 'RedHat'
 
-  - name: RPM | Add third-party sources to repository list
+  - name: YUM | Add third-party sources to repository list
     command: "rpm -Uvh /tmp/epel-release-7-2.noarch.rpm"
     when: ansible_os_family == 'RedHat'
     register: epel_repo_result
@@ -27,4 +27,3 @@
       state: installed
     with_items: php_packages
     when: ansible_os_family == 'RedHat'
-    notify: restart apache

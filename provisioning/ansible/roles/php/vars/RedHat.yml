@@ -1,7 +1,7 @@
 ---
 php_packages:
   - php
-  - php-devel
+  #- php-devel
   - php-mysql
   - php-mcrypt
   - php-cli
@@ -11,6 +11,7 @@ php_packages:
   - php-pear
   - php-apc
   - php-json
+  - php-ldap
   - pcre-devel
 yum_repos:
   - http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm

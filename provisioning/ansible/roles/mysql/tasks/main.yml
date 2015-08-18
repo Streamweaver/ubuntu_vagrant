@@ -37,10 +37,11 @@
   - name: CONFIG | copy .my.cnf with root password to ansible user
     template:
       src: my.cnf.j2
-      dest: "{{ mysql_user_home }}/.my.cnf"
-      group: vagrant
-      owner: vagrant
+      dest: "{{ item.home }}/.my.cnf"
+      group: "{{ item.name }}"
+      owner: "{{ item.name }}"
       mode: 0600
+    with_items: "{{ mysql_root_users }}"
 
   - name: SECURITY | remove all anonymous MySQL Users
     mysql_user:
