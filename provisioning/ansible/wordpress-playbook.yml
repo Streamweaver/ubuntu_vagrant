@@ -22,6 +22,12 @@
               - Require all granted
       a2modules_active:
         - 'rewrite'
+      a2_ssl:
+        - cert_file: "ssl/uhfd783.pem"
+        - key_file: "ssl/uhfd783.key"
+        - cert_path: "/etc/httpd/conf/ssl.cert/uhfd783.pem"
+        - key_path: "/etc/httpd/conf/ssl.key/uhfd783.key"
+        - chain_path: "/etc/httpd/conf/ssl.cert/uhfd783.pem"
       # MySQL Vars
       mysql_root_db_pass: OnlyUsedInVagrantDemo
       mysql_dbs:

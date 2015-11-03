@@ -1,0 +1,29 @@
+---
+https_siteconfig: ssl_ansible
+https_port: 443
+https_documentroot: /var/www/html
+
+# https_pem: ""
+# https_pem_path: ""
+# https_key: ""
+# https_key_path: ""
+
+https_directories: []
+  # - name: /var/www/html
+  #   options:
+  #     - Options FollowSymLinks MultiViews Includes ExecCGI
+  #     - AllowOverride all
+  #     - Order allow,deny
+  #     - allow from all
+  #     - Require all granted
+
+https_locationmatches: []
+  # - name: "/(data|conf|bin|inc)/"
+  # - options:
+  #     - Order allow,deny
+  #     - Deny from all
+  #     - Satisfy All
+
+https_aliases: []
+  # - name: /mydir
+  #   path: /opt/mydir

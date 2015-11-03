@@ -5,3 +5,5 @@ credentials/
 perlstuff/*
 secretvars.yml
 /provisioning/ansible/public_keys/
+/provisioning/ansible/ssl/*
+!/provisioning/ansible/ssl/README.md
