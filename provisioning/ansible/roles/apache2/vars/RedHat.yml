@@ -1,9 +1,0 @@
----
-  apache_service: httpd
-  apache_sites_dir: /etc/httpd/conf.d
-  apache_root: /etc/httpd
-  apache_user: apache
-  apache_pkgs:
-    - httpd
-    - mod_ssl
-    - openssh
