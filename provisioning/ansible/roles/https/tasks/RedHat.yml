@@ -5,8 +5,3 @@
     notify:
       - restart apache
       - enable apache
-
-  - name: FIREWALL | open http service port
-    firewalld: service=http permanent=true state=enabled
-
-  - service: name=firewalld state=restarted

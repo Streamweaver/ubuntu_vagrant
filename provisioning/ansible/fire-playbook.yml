@@ -17,29 +17,12 @@
         - streamweaver
       # Apache vars
       a2_documentroot: /opt/wordpress
-      a2_aliases:
-        - name: /wiki
-          path: /opt/dokuwiki
       a2_directories:
         - name: /
           options:
             - Options FollowSymLinks
             - AllowOverride None
             - Require all denied
-        - name: /opt/wordpress
-          options:
-              - Options FollowSymLinks MultiViews Includes ExecCGI
-              - AllowOverride All
-              - Order allow,deny
-              - Allow from all
-              - Require all granted
-        - name: /opt/dokuwiki
-          options:
-            - Options Indexes FollowSymLinks MultiViews
-            - AllowOverride None
-            - Order allow,deny
-            - allow from all
-            - Require all granted
       a2_locationmatches:
         - name: "/(data|conf|bin|inc)/"
           options:
@@ -48,6 +31,21 @@
             - Satisfy All
       a2modules_active:
         - 'rewrite'
+      # HTTPS Variables
+      https_pem: ssl/uhfd783.pem
+      https_pem_path: /etc/httpd/conf/ssl.crt/uhfd783.pem
+      https_key: ssl/uhfd783.key
+      https_key_path: /etc/httpd/conf/ssl.key/uhfd783.key
+      https_siteconfig: ssl
+      https_documentroot: /opt/wordpress
+      https_directories:
+        - name: /opt/wordpress
+          options:
+              - Options FollowSymLinks MultiViews Includes ExecCGI
+              - AllowOverride All
+              - Order allow,deny
+              - Allow from all
+              - Require all granted
       # mysql vars
       mysql_root_db_pass: "{{ _mysql_root_db_pass }}"
       mysql_root_users:
@@ -82,14 +80,10 @@
       wp_theme_active: wp-simple
       wp_app_user: "{{ apache_user }}"
       wp_app_group: "{{ apache_user }}"
-      # DokuWiki Vars
-      dw_dir: /opt/dokuwiki
-      dw_app_user: "{{ apache_user }}"
-      dw_app_group: "{{ apache_user }}"
     roles:
       - common
       - php
-      - apache2
+      - http
+      - https
       - mysql
       - wordpress
-      - dokuwiki

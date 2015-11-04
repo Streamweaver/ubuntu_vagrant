@@ -2,13 +2,10 @@
   - name: INSTALL | openssl
     yum: name=openssl state=present
 
-  - include: RedHat.yml
-    when: ansible_os_family == 'RedHat'
-
   - name: SSL | Copy ssl pem file
     copy:
-      src: {{ https_pem }}
-      dest: {{ https_pem_path }}
+      src: "{{ https_pem }}"
+      dest: "{{ https_pem_path }}"
       owner: root
       group: root
       mode: 400
@@ -16,8 +13,8 @@
 
   - name: SSL | Copy ssl key file
     copy:
-      src: {{ https_key }}
-      dest: {{ https_key_path }}
+      src: "{{ https_key }}"
+      dest: "{{ https_key_path }}"
       owner: root
       group: root
       mode: 400
@@ -30,3 +27,6 @@
       mode: 0644
     notify:
       - restart apache
+
+  - include: RedHat.yml
+    when: ansible_os_family == 'RedHat'
